@@ -2,7 +2,7 @@
 .idea/
 *.iml
 *.iws
-.gradle/**
+.gradle/
 build/
 # Mac
 .DS_Store
