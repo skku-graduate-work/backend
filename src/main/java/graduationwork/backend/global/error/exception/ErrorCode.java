@@ -11,6 +11,7 @@ public enum ErrorCode {
      //400 Bad Request
      BAD_REQUEST(HttpStatus.BAD_REQUEST, "잘못된 요청입니다."),
      NOT_MATCH_LOGIN_INFORMATION(HttpStatus.BAD_REQUEST,"로그인 실패, 아이디와 비밀번호를 확인해주세요"),
+     FAILT_SOCIAL_LOGIN(HttpStatus.BAD_REQUEST,"소셜 로그인 실패, 서버 로그를 확인해주세요"),
     /**
      * 401 Unauthorized
      */
