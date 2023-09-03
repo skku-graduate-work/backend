@@ -2,8 +2,7 @@ package graduationwork.backend.global.oauth2.handler;
 
 import graduationwork.backend.domain.user.repository.UserRepository;
 import graduationwork.backend.global.config.jwt.service.JwtService;
-import graduationwork.backend.global.oauth2.CustomOAuth2User;
-import jakarta.servlet.FilterChain;
+import graduationwork.backend.global.oauth2.dto.CustomOAuth2User;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
