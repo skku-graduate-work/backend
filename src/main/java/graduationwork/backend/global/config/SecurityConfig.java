@@ -10,6 +10,9 @@ import graduationwork.backend.global.login.filter.CustomJsonUsernamePasswordAuth
 import graduationwork.backend.global.login.handler.LoginFailureHandler;
 import graduationwork.backend.global.login.handler.LoginSuccessHandler;
 import graduationwork.backend.global.login.service.LoginService;
+import graduationwork.backend.global.oauth2.handler.OAuth2LoginFailureHandler;
+import graduationwork.backend.global.oauth2.handler.OAuth2LoginSuccessHandler;
+import graduationwork.backend.global.oauth2.service.CustomOAuth2UserService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.annotation.Bean;
@@ -43,11 +46,20 @@ public class SecurityConfig {
 
     private final JwtAuthenticationEntryPoint entryPoint;
     private final JwtExceptionFilter jwtExceptionFilter;
+    private final OAuth2LoginSuccessHandler oAuth2LoginSuccessHandler;
+    private final OAuth2LoginFailureHandler oAuth2LoginFailureHandler;
+    private final CustomOAuth2UserService customOAuth2UserService;
     private static final List<RequestMatcher> specialUrlMatchers = List.of(
             new AntPathRequestMatcher("/api/v1/user/login/**"),
             new AntPathRequestMatcher("/api/v1/user/signup/**"),
             new AntPathRequestMatcher("/swagger-ui/**"),
-            new AntPathRequestMatcher("/v3/api-docs/**")
+            new AntPathRequestMatcher("/v3/api-docs/**"),
+            new AntPathRequestMatcher("/oauth2/**"),
+            new AntPathRequestMatcher("/favicon.ico"),
+            new AntPathRequestMatcher("/login/**")
+
+
+
 
     );
     @Bean
@@ -59,7 +71,13 @@ public class SecurityConfig {
                 .and()
                 .authorizeHttpRequests()
                 .requestMatchers(specialUrlMatchers.toArray(new RequestMatcher[0])).permitAll()
-                .anyRequest().authenticated();
+                .anyRequest().authenticated()
+                .and()
+                .oauth2Login()
+                .successHandler(oAuth2LoginSuccessHandler)
+                .failureHandler(oAuth2LoginFailureHandler)
+                .userInfoEndpoint().userService(customOAuth2UserService);
+
 
 
         http.addFilterAfter(customJsonUsernamePasswordAuthenticationFilter(), LogoutFilter.class);
