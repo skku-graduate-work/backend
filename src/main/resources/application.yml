@@ -13,3 +13,7 @@ spring:
     active: prod
     include:
       - jwt
+      - oauth
+logging:
+  level:
+    web: debug
