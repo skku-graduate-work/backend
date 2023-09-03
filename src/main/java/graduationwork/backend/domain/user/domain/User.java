@@ -19,6 +19,7 @@ public class User {
     private Long id;
 
     private String email;
+    private String nickname;
     private String password;
 
 
@@ -47,10 +48,23 @@ public class User {
     }
 
 
+
+
     @Builder
-    public User(String email, String password) {
+    public User(String email, String nickname, String password, Float minCalories, Float minCarbs, Float minFat, Float minProtein, Float maxCalories, Float maxCarbs, Float maxFat, Float maxProtein, String profileImg, String refreshToken) {
         this.email = email;
+        this.nickname = nickname;
         this.password = password;
+        this.minCalories = minCalories;
+        this.minCarbs = minCarbs;
+        this.minFat = minFat;
+        this.minProtein = minProtein;
+        this.maxCalories = maxCalories;
+        this.maxCarbs = maxCarbs;
+        this.maxFat = maxFat;
+        this.maxProtein = maxProtein;
+        this.profileImg = profileImg;
+        this.refreshToken = refreshToken;
     }
 
     public void updateMinNutrients(Float minCalories, Float minCarbs, Float minFat, Float minProtein) {
