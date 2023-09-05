@@ -8,5 +8,4 @@ public class ConflictException extends BusinessException{
     public ConflictException(){
         super(ErrorCode.CONFLICT);
     }
-
 }

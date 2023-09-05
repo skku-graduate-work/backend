@@ -39,8 +39,6 @@ public enum ErrorCode {
 
     //409 Conflict
     CONFLICT(HttpStatus.CONFLICT, "이미 존재하는 리소스입니다."),
-    CONFLICT_INGREDIENT(HttpStatus.CONFLICT, "이미 등록된 재료입니다."),
-
 
     /**
      * 500 Internal Server Error
