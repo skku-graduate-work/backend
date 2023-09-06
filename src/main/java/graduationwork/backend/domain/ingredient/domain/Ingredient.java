@@ -1,5 +1,6 @@
 package graduationwork.backend.domain.ingredient.domain;
 
+import graduationwork.backend.domain.FoodIngredient.domain.FoodIngredient;
 import graduationwork.backend.domain.user.domain.User;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
@@ -9,6 +10,8 @@ import lombok.NoArgsConstructor;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 @Getter
 @Entity
@@ -29,6 +32,9 @@ public class Ingredient {
     private Float carbs;
     private Float fat;
     private Float protein;
+
+    @OneToMany(mappedBy = "ingredient")
+    private List<FoodIngredient> Foodlist = new ArrayList<>();
 
     @Builder
     public Ingredient(User user, String name, String image, LocalDate expiration_date, Float calories, Float carbs, Float fat, Float protein) {
