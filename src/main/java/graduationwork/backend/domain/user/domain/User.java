@@ -1,5 +1,6 @@
 package graduationwork.backend.domain.user.domain;
 
+import graduationwork.backend.domain.food.domain.Food;
 import graduationwork.backend.domain.ingredient.domain.Ingredient;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
@@ -38,9 +39,10 @@ public class User {
     private String refreshToken;
 
     @OneToMany(mappedBy = "user")
-    private List<Ingredient> ingredientList = new ArrayList<Ingredient>();
+    private List<Ingredient> ingredientList = new ArrayList<>();
 
-
+    @OneToMany(mappedBy = "user")
+    private List<Food> foodList = new ArrayList<>();
 
 
     public void passwordEncode(PasswordEncoder passwordEncoder) {
