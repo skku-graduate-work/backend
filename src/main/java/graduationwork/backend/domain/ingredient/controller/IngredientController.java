@@ -30,7 +30,7 @@ public class IngredientController {
     private final IngredientService ingredientService;
 
     @PostMapping("/api/v1/ingredient-by-user")
-    @Operation(summary = "재료 등록", description = "사용자님이 보유하고 있는 식재료들로 자신의 냉장고에 재료를 등록해주세요")
+    @Operation(summary = "재료 등록", description = "사용자님이 보유하고 있는 식재료들로 자신의 냉장고에 재료를 등록해주세요, 있는 식재료는 등록이 불가능합니다. 먼저 레시피로 만들어 드셔 보세요!")
     public ResponseEntity RegisterIngredient(@Valid @RequestBody IngredientRequestDto ingredientRequestDto, Authentication authentication) {
         String email = authentication.getName();
         Optional<User> user = userRepository.findByEmail(email);
