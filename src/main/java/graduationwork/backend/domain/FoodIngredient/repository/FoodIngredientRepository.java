@@ -11,7 +11,7 @@ import java.util.Optional;
 
 public interface FoodIngredientRepository extends JpaRepository<FoodIngredient, Long> {
 
-    @Query("select fi from FoodIngredient fi where fi.ingredient.name=:name")
-    List<Optional<FoodIngredient>> findFoodIngredientByIngredient(@Param("name") String name);
+//    @Query("select fi from FoodIngredient fi where fi.ingredient.name=:name")
+//    List<Optional<FoodIngredient>> findFoodIngredientByIngredient(@Param("name") String name);
 
 }
