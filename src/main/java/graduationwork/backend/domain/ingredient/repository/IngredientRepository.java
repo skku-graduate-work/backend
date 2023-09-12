@@ -11,9 +11,9 @@ import java.util.Optional;
 
 public interface IngredientRepository extends JpaRepository<Ingredient,Long> {
 
-    @Query("select i from Ingredient i where i.user.id=:userId and i.name=:name")
-    Optional<Ingredient> findIngredientByUserIdAndName(@Param("userId") Long userId,@Param("name") String name);
+    @Query("select i from Ingredient i where i.user.id=:userId and i.name_ko=:name")
+    Optional<Ingredient> findIngredientByUserIdAndNameKo(@Param("userId") Long userId,@Param("name") String name);
 
-    @Query("select i from Ingredient i where i.name=:name")
-    Optional<Ingredient> findIngredientByName(@Param("name") String name);
+    @Query("select i from Ingredient i where i.name_ko=:name")
+    Optional<Ingredient> findIngredientByNameKo(@Param("name") String name);
 }
