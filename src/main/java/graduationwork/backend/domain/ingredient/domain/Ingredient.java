@@ -25,7 +25,9 @@ public class Ingredient {
     @JoinColumn(name="user_id")
     private User user;
 
-    private String name;
+    private String name_ko;
+    private String name_en;
+
     private String image;
     private LocalDate expiration_date;
     private Float calories;
@@ -37,9 +39,10 @@ public class Ingredient {
     private List<FoodIngredient> Foodlist = new ArrayList<>();
 
     @Builder
-    public Ingredient(User user, String name, String image, LocalDate expiration_date, Float calories, Float carbs, Float fat, Float protein) {
+    public Ingredient(User user, String name_ko, String name_en,String image, LocalDate expiration_date, Float calories, Float carbs, Float fat, Float protein) {
         this.user = user;
-        this.name = name;
+        this.name_ko = name_ko;
+        this.name_en = name_en;
         this.image = image;
         this.expiration_date = expiration_date;
         this.calories = calories;

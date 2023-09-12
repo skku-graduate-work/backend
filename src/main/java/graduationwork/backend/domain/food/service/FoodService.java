@@ -10,6 +10,7 @@ import graduationwork.backend.domain.food.repository.FoodRepository;
 import graduationwork.backend.domain.ingredient.domain.Ingredient;
 import graduationwork.backend.domain.ingredient.repository.IngredientRepository;
 import graduationwork.backend.domain.user.domain.User;
+import graduationwork.backend.global.TranslateService;
 import graduationwork.backend.global.config.ApiConfig;
 import graduationwork.backend.global.error.exception.BadRequestException;
 import graduationwork.backend.global.error.exception.ConflictException;
@@ -39,29 +40,28 @@ public class FoodService {
     private final FoodRepository foodRepository;
     private final IngredientRepository ingredientRepository;
     private final FoodIngredientRepository foodIngredientRepository;
-
+    private final TranslateService translateService;
     @Transactional
     public ResponseEntity getIngredientForMakeFood(IngredientRequestDtoForFood ingredientRequestDtoForFood, User user) {
-        Optional<Ingredient> ingredient1= ingredientRepository.findIngredientByName(ingredientRequestDtoForFood.getFood1());
-        Optional<Ingredient> ingredient2= ingredientRepository.findIngredientByName(ingredientRequestDtoForFood.getFood2());
-        Optional<Ingredient> ingredient3= ingredientRepository.findIngredientByName(ingredientRequestDtoForFood.getFood3());
+        Optional<Ingredient> ingredient1= ingredientRepository.findIngredientByNameKo(ingredientRequestDtoForFood.getFood1());
+        Optional<Ingredient> ingredient2= ingredientRepository.findIngredientByNameKo(ingredientRequestDtoForFood.getFood2());
+        Optional<Ingredient> ingredient3= ingredientRepository.findIngredientByNameKo(ingredientRequestDtoForFood.getFood3());
 
         if (ingredient1.isEmpty() || ingredient2.isEmpty() ||ingredient3.isEmpty() ) {
+            log.info(ErrorCode.INGREDIENT_NOT_FOUND.getMessage());
             throw new NotFoundException(ErrorCode.INGREDIENT_NOT_FOUND);
         }
         List<Ingredient> selectedIngredients = new ArrayList<>();
         selectedIngredients.add(ingredient1.get());
         selectedIngredients.add(ingredient2.get());
         selectedIngredients.add(ingredient3.get());
+        log.info(ingredient1.get().getName_en());
 
         if (!foodRepository.findFoodsByIngredients(selectedIngredients,3).isEmpty()) {
+            log.info(ErrorCode.CONFLICT_FOOD.getMessage());
             throw new ConflictException(ErrorCode.CONFLICT_FOOD);
         }
-        // TODO: 중복 검사
-//        if (foodIngredientRepository.findFoodIngredientByIngredient(ingredientRequestDtoForFood.getFood1()).isPresent() && foodIngredientRepository.findFoodIngredientByIngredient(ingredient2.get().getName()).isPresent() && foodIngredientRepository.findFoodIngredientByIngredient(ingredient3.get().getName()).isPresent()  ) {
-//            log.info(ErrorCode.CONFLICT_FOOD.getMessage());
-//            throw new ConflictException(ErrorCode.CONFLICT_FOOD);
-//        }
+
         ResponseEntity response = getResponse(ingredientRequestDtoForFood);
         return ResponseEntity.ok(saveFoodByIngredient(response, ingredient1.get(),ingredient2.get(),ingredient3.get(),user));
     }
@@ -75,10 +75,13 @@ public class FoodService {
         final String url = "https://api.spoonacular.com/recipes/findByIngredients";
         HttpHeaders httpHeaders = new HttpHeaders();
         httpHeaders.set("x-api-key", apiConfig.getKey());
+        Ingredient ingredient1 = ingredientRepository.findIngredientByNameKo(ingredientRequestDtoForFood.getFood1()).get();
+        Ingredient ingredient2 = ingredientRepository.findIngredientByNameKo(ingredientRequestDtoForFood.getFood2()).get();
+        Ingredient ingredient3 = ingredientRepository.findIngredientByNameKo(ingredientRequestDtoForFood.getFood3()).get();
 
 
         Map<String, Object> params = new HashMap<>();
-        params.put("ingredients", ingredientRequestDtoForFood.getFood1() + ",+" + ingredientRequestDtoForFood.getFood2() + ",+" + ingredientRequestDtoForFood.getFood3());
+        params.put("ingredients", ingredient1.getName_en() + ",+" + ingredient2.getName_en() + ",+" + ingredient3.getName_en());
         params.put("number", 5);
 
         HttpEntity<?> requestEntity = new HttpEntity<>(httpHeaders);
@@ -104,6 +107,7 @@ public class FoodService {
      */
     private List<Map<String,String>> saveFoodByIngredient(ResponseEntity response,Ingredient ingredient1,Ingredient ingredient2,Ingredient ingredient3,User user) {
         String jsonData = (String) response.getBody();
+        log.info(jsonData);
         ObjectMapper objectMapper = new ObjectMapper();
         List<Map<String, String>> responseList = new ArrayList<>();
 
@@ -111,19 +115,23 @@ public class FoodService {
             JsonNode foodArray = objectMapper.readTree(jsonData);
             log.info(String.valueOf(foodArray.size()));
             for (JsonNode foodNode : foodArray) {
-                String name = foodNode.get("title").toString();
+                String name_en = foodNode.get("title").toString();
                 String image = foodNode.get("image").toString();
-                log.info("음식: {}, 이미지: {}", name, image);
+                log.info("음식: {}, 이미지: {}", name_en, image);
+                Map<String, String> foodInfo = new HashMap<>();
+                foodInfo.put("name_en", name_en);
+                String name_ko=translateService.translateText("en", "ko", name_en);
+                foodInfo.put("name_ko", name_ko);
+                foodInfo.put("image", image);
+                responseList.add(foodInfo);
+
                 // 음식 저장
-                Food food = foodRepository.save(Food.builder().name(name).image(image).user(user).build());
+                Food food = foodRepository.save(Food.builder().name_en(name_en.replaceAll("\"", "")).name_ko(name_ko).image(image).user(user).build());
                 foodIngredientRepository.save(FoodIngredient.builder().ingredient(ingredient1).food(food).build());
                 foodIngredientRepository.save(FoodIngredient.builder().ingredient(ingredient2).food(food).build());
                 foodIngredientRepository.save(FoodIngredient.builder().ingredient(ingredient3).food(food).build());
 
-                Map<String, String> foodInfo = new HashMap<>();
-                foodInfo.put("name", name);
-                foodInfo.put("image", image);
-                responseList.add(foodInfo);
+
 
 
 

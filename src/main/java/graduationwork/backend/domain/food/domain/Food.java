@@ -24,7 +24,8 @@ public class Food {
     @JoinColumn(name="user_id")
     private User user;
 
-    private String name;
+    private String name_ko;
+    private String name_en;
     private String image;
 
     @OneToMany(mappedBy = "food")
@@ -32,9 +33,10 @@ public class Food {
 
 
     @Builder
-    public Food(User user, String name, String image) {
+    public Food(User user, String name_ko,String name_en, String image) {
         this.user = user;
-        this.name = name;
+        this.name_ko = name_ko;
+        this.name_en = name_en;
         this.image = image;
     }
 }
