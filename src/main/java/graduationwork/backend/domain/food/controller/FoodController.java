@@ -25,7 +25,7 @@ public class FoodController {
     private final UserRepository userRepository;
 
     @PostMapping("/api/v1/food-by-ingredient")
-    @Operation(summary = "음식레시피 얻어오기", description = "냉장고 속에 있는 재료로 레시피를 얻어보세요!")
+    @Operation(summary = "음식레시피 얻어오기", description = "냉장고 속에 있는 3가지 재료로 5가지 음식 얻어오기")
     public ResponseEntity GetIngredientForMakeFood(@RequestBody IngredientRequestDtoForFood ingredientRequestDtoForFood, Authentication authentication) {
         String email = authentication.getName();
         Optional<User> user = userRepository.findByEmail(email);
