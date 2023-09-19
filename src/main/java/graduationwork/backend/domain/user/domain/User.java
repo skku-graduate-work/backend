@@ -49,6 +49,9 @@ public class User {
         this.password = passwordEncoder.encode(this.password);
     }
 
+    public void updateProfileImage(String imgUrl) {
+        this.profileImg = imgUrl;
+    }
     public void updateRefreshToken(String updateRefreshToken) {
         this.refreshToken = updateRefreshToken;
     }
@@ -87,4 +90,5 @@ public class User {
         this.maxProtein = maxProtein;
 
     }
+
 }
