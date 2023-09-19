@@ -43,9 +43,9 @@ public class FoodService {
     private final TranslateService translateService;
     @Transactional
     public ResponseEntity getIngredientForMakeFood(IngredientRequestDtoForFood ingredientRequestDtoForFood, User user) {
-        Optional<Ingredient> ingredient1= ingredientRepository.findIngredientByNameKo(ingredientRequestDtoForFood.getFood1());
-        Optional<Ingredient> ingredient2= ingredientRepository.findIngredientByNameKo(ingredientRequestDtoForFood.getFood2());
-        Optional<Ingredient> ingredient3= ingredientRepository.findIngredientByNameKo(ingredientRequestDtoForFood.getFood3());
+        Optional<Ingredient> ingredient1= ingredientRepository.findIngredientByNameKo(ingredientRequestDtoForFood.getFood1(),user.getId());
+        Optional<Ingredient> ingredient2= ingredientRepository.findIngredientByNameKo(ingredientRequestDtoForFood.getFood2(),user.getId());
+        Optional<Ingredient> ingredient3= ingredientRepository.findIngredientByNameKo(ingredientRequestDtoForFood.getFood3(),user.getId());
 
         if (ingredient1.isEmpty() || ingredient2.isEmpty() ||ingredient3.isEmpty() ) {
             log.info(ErrorCode.INGREDIENT_NOT_FOUND.getMessage());
@@ -62,7 +62,7 @@ public class FoodService {
             throw new ConflictException(ErrorCode.CONFLICT_FOOD);
         }
 
-        ResponseEntity response = getResponse(ingredientRequestDtoForFood);
+        ResponseEntity response = getResponse(ingredientRequestDtoForFood, user);
         return ResponseEntity.ok(saveFoodByIngredient(response, ingredient1.get(),ingredient2.get(),ingredient3.get(),user));
     }
     /**
@@ -70,14 +70,14 @@ public class FoodService {
      * @param ingredientRequestDtoForFood
      * @return 3가지 재료로 만들 수 있는 음식 반환 하기 +
      */
-    private ResponseEntity getResponse(IngredientRequestDtoForFood ingredientRequestDtoForFood) {
+    private ResponseEntity getResponse(IngredientRequestDtoForFood ingredientRequestDtoForFood,User user) {
 
         final String url = "https://api.spoonacular.com/recipes/findByIngredients";
         HttpHeaders httpHeaders = new HttpHeaders();
         httpHeaders.set("x-api-key", apiConfig.getKey());
-        Ingredient ingredient1 = ingredientRepository.findIngredientByNameKo(ingredientRequestDtoForFood.getFood1()).get();
-        Ingredient ingredient2 = ingredientRepository.findIngredientByNameKo(ingredientRequestDtoForFood.getFood2()).get();
-        Ingredient ingredient3 = ingredientRepository.findIngredientByNameKo(ingredientRequestDtoForFood.getFood3()).get();
+        Ingredient ingredient1 = ingredientRepository.findIngredientByNameKo(ingredientRequestDtoForFood.getFood1(),user.getId()).get();
+        Ingredient ingredient2 = ingredientRepository.findIngredientByNameKo(ingredientRequestDtoForFood.getFood2(),user.getId()).get();
+        Ingredient ingredient3 = ingredientRepository.findIngredientByNameKo(ingredientRequestDtoForFood.getFood3(),user.getId()).get();
 
 
         Map<String, Object> params = new HashMap<>();
