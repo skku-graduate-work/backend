@@ -15,6 +15,10 @@ spring:
       - jwt
       - oauth
       - api
+      - aws
 logging:
   level:
     web: debug
+
+
+
