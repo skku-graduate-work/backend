@@ -4,8 +4,8 @@ REPOSITORY=/home/ubuntu/app/step2
 cd $REPOSITORY
 
 APPNAME=gradwork
-JAR_NAME=$(ls $REPOSITORY/build/libs/ | grep 'SNAPSHOT.jar' | tail -n 1)
-JAR_PATH=$REPOSITORY/build/libs/$JAR_NAME
+JAR_NAME=$(ls $REPOSITORY/zip | grep 'SNAPSHOT.jar' | tail -n 1)
+JAR_PATH=$REPOSITORY/zip/$JAR_NAME
 
 CURRENT_PID=$(pgrep -f $APP_NAME)
 
