@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-REPOSITORY=/home/ubuntu/gradwork
+REPOSITORY=/home/ubuntu/app/step2
 cd $REPOSITORY
 
 APPNAME=gradwork
