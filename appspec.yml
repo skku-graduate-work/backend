@@ -3,10 +3,10 @@ os: linux
 
 files:
   - source: /
-    destination: /home/ubuntu/gradwork
+    destination: /home/ubuntu/app/step2/zip/
     
 permissions:
-  - object: /home/ubuntu/gradwork/
+  - object: /home/ubuntu/app/step2/zip/
     owner: ubuntu
     group: ubuntu
 hooks:
