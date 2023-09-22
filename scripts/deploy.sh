@@ -3,7 +3,7 @@
 REPOSITORY=/home/ubuntu/app/step2
 cd $REPOSITORY
 
-APPNAME=backend
+APPNAME=java
 JAR_NAME=$(ls $REPOSITORY/zip | grep 'SNAPSHOT.jar' | tail -n 1)
 JAR_PATH=$REPOSITORY/zip/$JAR_NAME
 
