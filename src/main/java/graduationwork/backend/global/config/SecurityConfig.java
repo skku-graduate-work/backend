@@ -56,7 +56,8 @@ public class SecurityConfig {
             new AntPathRequestMatcher("/v3/api-docs/**"),
             new AntPathRequestMatcher("/oauth2/**"),
             new AntPathRequestMatcher("/favicon.ico"),
-            new AntPathRequestMatcher("/login/**")
+            new AntPathRequestMatcher("/login/**"),
+            new AntPathRequestMatcher("/api/v1/favorite-food/random-food/**")
 
 
 
