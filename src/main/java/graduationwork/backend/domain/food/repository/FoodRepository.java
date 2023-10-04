@@ -11,13 +11,14 @@ import java.util.Optional;
 
 public interface FoodRepository extends JpaRepository<Food, Long> {
 
-//    @Query("select f from Food f where f.name=:name")
-//    Optional<Food> findFoodByName(@Param("name") String name);
 
     //TODO: 중복검사 쿼리 최적화 고민해보기
     @Query("select f from Food f join f.ingredientList fi join fi.ingredient i where i in :ingredients group by f having count(fi.ingredient)=:ingredientCount")
     List<Food> findFoodsByIngredients(@Param("ingredients") List<Ingredient> ingredientList, @Param("ingredientCount") int count);
 
+
+    @Query("select f from Food f ORDER BY RAND() limit 20")
+    List<Food> getRandomFood();
 
 
 

@@ -82,7 +82,7 @@ public class UserController {
 
         if (user.isPresent()) {
             log.info(user.get().getEmail());
-            return userService.getUserAndIngredient(user.get());
+            return userService.getUserAndIngredientAndFavoriteFood(user.get());
         } else throw new UnauthorizedException(ErrorCode.UNAUTHORIZED);
     }
 }

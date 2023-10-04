@@ -6,6 +6,7 @@ import lombok.Getter;
 @Getter
 public class UserInfo {
     private final String nickname;
+    private final String email;
     private final String profileImg;
     private final Float minCalories;
     private final Float minCarbs;
@@ -18,9 +19,9 @@ public class UserInfo {
     private final Float maxProtein;
 
     @Builder
-
-    public UserInfo(String nickname, String profileImg, Float minCalories, Float minCarbs, Float minFat, Float minProtein, Float maxCalories, Float maxCarbs, Float maxFat, Float maxProtein) {
+    public UserInfo(String nickname, String email,String profileImg, Float minCalories, Float minCarbs, Float minFat, Float minProtein, Float maxCalories, Float maxCarbs, Float maxFat, Float maxProtein) {
         this.nickname = nickname;
+        this.email = email;
         this.profileImg = profileImg;
         this.minCalories = minCalories;
         this.minCarbs = minCarbs;
