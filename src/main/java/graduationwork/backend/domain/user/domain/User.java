@@ -1,5 +1,6 @@
 package graduationwork.backend.domain.user.domain;
 
+import graduationwork.backend.domain.favoriteFood.domain.FavoriteFood;
 import graduationwork.backend.domain.food.domain.Food;
 import graduationwork.backend.domain.ingredient.domain.Ingredient;
 import jakarta.persistence.*;
@@ -44,6 +45,9 @@ public class User {
     @OneToMany(mappedBy = "user")
     private List<Food> foodList = new ArrayList<>();
 
+
+    @OneToMany(mappedBy = "user")
+    private List<FavoriteFood> favoriteFoodList = new ArrayList<>();
 
     public void passwordEncode(PasswordEncoder passwordEncoder) {
         this.password = passwordEncoder.encode(this.password);
