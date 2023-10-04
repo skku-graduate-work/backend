@@ -1,5 +1,6 @@
 package graduationwork.backend.domain.user.service;
 
+import graduationwork.backend.domain.favoriteFood.domain.FavoriteFood;
 import graduationwork.backend.domain.ingredient.domain.Ingredient;
 import graduationwork.backend.domain.ingredient.repository.IngredientRepository;
 import graduationwork.backend.domain.user.domain.User;
@@ -11,7 +12,6 @@ import graduationwork.backend.global.error.exception.ConflictException;
 import graduationwork.backend.global.error.exception.ErrorCode;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.http.protocol.HTTP;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -19,7 +19,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -68,13 +67,15 @@ public class UserService {
     }
 
     @Transactional
-    public ResponseEntity getUserAndIngredient(User user) {
+    public ResponseEntity getUserAndIngredientAndFavoriteFood(User user) {
         Optional<User> findUser = userRepository.findByEmail(user.getEmail());
-        UserAndIngredientResponseDto userAndIngredientResponseDto=null;
+        UserAndIngredientAndFavoriteFoodResponseDto userAndIngredientResponseDto=null;
         if (findUser.isPresent()) {
             UserInfo userInfo = getUserInfo(findUser.get());
             List<IngredientInfo> ingredientInfoList = getIngredientInfoList(findUser.get());
-            userAndIngredientResponseDto=UserAndIngredientResponseDto.builder()
+            List<FavoriteFoodInfo> foodInfoList = getFavoriteFoodInfoList(findUser.get());
+            userAndIngredientResponseDto = UserAndIngredientAndFavoriteFoodResponseDto.builder()
+                    .foodInfoList(foodInfoList)
                     .ingredients(ingredientInfoList)
                     .user(userInfo)
                     .build();
@@ -82,6 +83,25 @@ public class UserService {
 
         } else return ResponseEntity.status(HttpStatus.NOT_FOUND).body(ErrorCode.ENTITY_NOT_FOUND);
 
+    }
+
+    private List<FavoriteFoodInfo> getFavoriteFoodInfoList(User findUser) {
+        List<FavoriteFood> favoriteFoodList = findUser.getFavoriteFoodList();
+        List<FavoriteFoodInfo> favoriteFoodInfoList = new ArrayList<>();
+        if (favoriteFoodList.isEmpty()) {
+            return null;
+        } else {
+            for (FavoriteFood food: favoriteFoodList) {
+                FavoriteFoodInfo favoriteFoodInfo = FavoriteFoodInfo.builder()
+                        .food_id(food.getFood_id())
+                        .name_ko(food.getName_ko())
+                        .name_en(food.getName_en())
+                        .image(food.getImage())
+                        .build();
+                favoriteFoodInfoList.add(favoriteFoodInfo);
+            }
+            return favoriteFoodInfoList;
+        }
     }
 
     private List<IngredientInfo> getIngredientInfoList(User findUser) {
@@ -110,6 +130,7 @@ public class UserService {
     private static UserInfo getUserInfo(User findUser) {
         return UserInfo.builder()
                 .nickname(findUser.getNickname())
+                .email(findUser.getEmail())
                 .profileImg(findUser.getProfileImg())
                 .minCalories(findUser.getMinCalories())
                 .minCarbs(findUser.getMinCarbs())
