@@ -2,9 +2,9 @@ name: Build and Deploy to EC2
 
 on:
   push:
-    branches: ["develop"]
+    branches: ["release"]
   pull_request:
-    branches: ["develop"]
+    branches: ["release"]
 
 env:
   PROJECT_NAME: gradwork
