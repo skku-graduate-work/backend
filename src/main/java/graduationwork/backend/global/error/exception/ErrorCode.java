@@ -32,6 +32,7 @@ public enum ErrorCode {
     ENTITY_NOT_FOUND(HttpStatus.NOT_FOUND,"엔티티를 찾을 수 없습니다"),
     MEMBER_NOT_FOUND(HttpStatus.NOT_FOUND,"유저가 존재하지 않습니다"),
     INGREDIENT_NOT_FOUND(HttpStatus.NOT_FOUND,"재료가 존재하지 않습니다"),
+    FOOD_NOT_FOUND(HttpStatus.NOT_FOUND,"음식이 존재하지 않습니다"),
     /**
      * 405 Method Not Allowed
      */
@@ -41,7 +42,7 @@ public enum ErrorCode {
     CONFLICT(HttpStatus.CONFLICT, "이미 존재하는 리소스입니다."),
     CONFLICT_INGREDIENT(HttpStatus.CONFLICT, "이미 등록된 재료입니다."),
     CONFLICT_FOOD(HttpStatus.CONFLICT, "이미 생성된 음식입니다. 불필요한 API 호출이 될 수 있습니다."),
-
+    CONFLICT_FAVORITE_FOOD(HttpStatus.CONFLICT,"이미 체크된 선호 음식입니다"),
     /**
      * 500 Internal Server Error
      */
