@@ -11,6 +11,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.ResourceLoader;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.util.ArrayList;
@@ -24,11 +25,14 @@ public class VersionServiceImpl implements VisionService {
 
     private final CloudVisionTemplate cloudVisionTemplate;
     private final ResourceLoader resourceLoader;
+    private final TranslateService translateService;
+
 
     @Autowired
-    public VersionServiceImpl(CloudVisionTemplate cloudVisionTemplate, ResourceLoader resourceLoader) {
+    public VersionServiceImpl(CloudVisionTemplate cloudVisionTemplate, ResourceLoader resourceLoader, TranslateService translateService) {
         this.cloudVisionTemplate = cloudVisionTemplate;
         this.resourceLoader = resourceLoader;
+        this.translateService = translateService;
     }
 
     @Override
@@ -36,17 +40,16 @@ public class VersionServiceImpl implements VisionService {
         AnnotateImageResponse response = cloudVisionTemplate.analyzeImage(file.getResource(), Feature.Type.LABEL_DETECTION);
         List<EntityAnnotation> list = response.getLabelAnnotationsList();
 
-        log.info(list.toString());
-
         List<Map<String, String>> responseList = new ArrayList<>();
 
         for (EntityAnnotation now : list) {
             Map<String, String> map = new HashMap<>();
-            map.put("description", now.getDescription());
+            map.put("description_en", now.getDescription());
+            String description_ko=translateService.translateText("en", "ko", now.getDescription());
+            map.put("description_ko", description_ko);
             map.put("score", String.valueOf(now.getScore()));
             responseList.add(map);
         }
-
 
         return responseList;
     }
