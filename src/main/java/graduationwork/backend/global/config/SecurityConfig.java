@@ -57,7 +57,11 @@ public class SecurityConfig {
             new AntPathRequestMatcher("/oauth2/**"),
             new AntPathRequestMatcher("/favicon.ico"),
             new AntPathRequestMatcher("/login/**"),
-            new AntPathRequestMatcher("/api/v1/favorite-food/random-food/**")
+            new AntPathRequestMatcher("/api/v1/favorite-food/random-food/**"),
+            new AntPathRequestMatcher("/api/v1/ingredient/detect-label-from-image"),
+            new AntPathRequestMatcher("/api/v1/ingredient/extract-text-from-image")
+
+
 
 
 
