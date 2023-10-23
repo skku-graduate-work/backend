@@ -12,6 +12,7 @@ import graduationwork.backend.global.S3Service;
 import graduationwork.backend.global.TranslateService;
 import graduationwork.backend.global.error.exception.ConflictException;
 import graduationwork.backend.global.error.exception.ErrorCode;
+import jakarta.persistence.criteria.CriteriaBuilder;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
@@ -66,4 +67,15 @@ public class IngredientService {
     }
 
 
+    @Transactional
+    public ResponseEntity registerIngredientByUserSelection(String name_ko, User user) {
+        Optional<Ingredient> ingredient = ingredientRepository.findIngredientByUserIdAndNameKo(user.getId(),name_ko);
+        String name_en = translateService.translateText("ko", "en", name_ko);
+        if (ingredient.isEmpty()) {
+            ingredientRepository.save(Ingredient.builder().user(user).name_ko(name_ko).name_en(name_en).build());
+            return ResponseEntity.status(HttpStatus.OK).body("성공적으로 등록되었습니다");
+        } else {
+            throw new ConflictException(ErrorCode.CONFLICT_INGREDIENT);
+        }
+    }
 }
