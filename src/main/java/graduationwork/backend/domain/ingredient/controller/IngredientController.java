@@ -1,5 +1,6 @@
 package graduationwork.backend.domain.ingredient.controller;
 
+import com.google.rpc.context.AttributeContext;
 import graduationwork.backend.domain.ingredient.service.IngredientService;
 import graduationwork.backend.domain.ingredient.dto.IngredientRequestDto;
 
@@ -47,8 +48,19 @@ public class IngredientController {
     }
 
     @PostMapping(value = "/api/v1/ingredient/detect-label-from-image", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-    @Operation(summary ="사진 이미지로 해당 식재료 후보군 반환",description = "사용자님이 가지고 있는 재료 사진으로 이미지를 등록해주세요. 해당 이미지에 맞는 식재료 라벨을 추천해드릴게요")
-    public List<Map<String, String>> detectLabelFromImage(@RequestPart(value = "image") MultipartFile file, Authentication authentication) {
+    @Operation(summary = "사진 이미지로 해당 식재료 후보군 반환", description = "사용자님이 가지고 있는 재료 사진으로 이미지를 등록해주세요. 해당 이미지에 맞는 식재료 라벨을 추천해드릴게요")
+    public List<Map<String, String>> DetectLabelFromImage(@RequestPart(value = "image") MultipartFile file, Authentication authentication) {
         return visionService.detectLabelFromImage(file);
+    }
+
+
+    @PostMapping(value = "/api/v1/ingredient/detect-label-from-image/user-result")
+    @Operation(summary = "사용자님이 선택한 식재료를 보내주세요", description = "사용자님이 선택한 식재료를 보내주세요, 냉장고에 등록해드릴게요")
+    public ResponseEntity RegisterIngredientByUserSelection(String name_ko, Authentication authentication) {
+        String email = authentication.getName();
+        Optional<User> user = userRepository.findByEmail(email);
+        if (user.isPresent()) {
+            return ingredientService.registerIngredientByUserSelection(name_ko, user.get());
+        } else throw new UnauthorizedException(ErrorCode.UNAUTHORIZED);
     }
 }
