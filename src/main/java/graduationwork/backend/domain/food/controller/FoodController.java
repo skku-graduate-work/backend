@@ -11,6 +11,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
@@ -32,6 +33,17 @@ public class FoodController {
 
         if (user.isPresent()) {
             return foodService.getIngredientForMakeFood(ingredientRequestDtoForFood, user.get());
+        } else throw new UnauthorizedException(ErrorCode.UNAUTHORIZED);
+    }
+
+    @GetMapping("/api/v1/food-by-nutrients")
+    @Operation(summary = "음식레시피 얻어오기", description = "사용자가 설정한 영양정보로 5가지 레시피 얻어오기")
+    public ResponseEntity GetFoodByNutrients(Authentication authentication) {
+        String email = authentication.getName();
+        Optional<User> user = userRepository.findByEmail(email);
+
+        if (user.isPresent()) {
+            return foodService.getFoodByNutrients(user.get());
         } else throw new UnauthorizedException(ErrorCode.UNAUTHORIZED);
     }
 }
