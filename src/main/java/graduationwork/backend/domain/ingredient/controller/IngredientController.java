@@ -1,6 +1,7 @@
 package graduationwork.backend.domain.ingredient.controller;
 
 import com.google.rpc.context.AttributeContext;
+import graduationwork.backend.domain.ingredient.repository.IngredientRepository;
 import graduationwork.backend.domain.ingredient.service.IngredientService;
 import graduationwork.backend.domain.ingredient.dto.IngredientRequestDto;
 
@@ -54,13 +55,13 @@ public class IngredientController {
     }
 
 
-    @PostMapping(value = "/api/v1/ingredient/detect-label-from-image/user-result")
+    @PostMapping(value = "/api/v1/ingredient/detect-label-from-image/user-result", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     @Operation(summary = "사용자님이 선택한 식재료를 보내주세요", description = "사용자님이 선택한 식재료를 보내주세요, 냉장고에 등록해드릴게요")
-    public ResponseEntity RegisterIngredientByUserSelection(String name_ko, Authentication authentication) {
+    public ResponseEntity RegisterIngredientByUserSelection(@RequestPart(value = "image") MultipartFile file, String name_ko, Authentication authentication) throws IOException {
         String email = authentication.getName();
         Optional<User> user = userRepository.findByEmail(email);
         if (user.isPresent()) {
-            return ingredientService.registerIngredientByUserSelection(name_ko, user.get());
+            return ingredientService.registerIngredientByUserSelection(file, name_ko, user.get());
         } else throw new UnauthorizedException(ErrorCode.UNAUTHORIZED);
     }
 }

@@ -68,12 +68,14 @@ public class IngredientService {
 
 
     @Transactional
-    public ResponseEntity registerIngredientByUserSelection(String name_ko, User user) {
+    public ResponseEntity registerIngredientByUserSelection(MultipartFile file,String name_ko, User user) throws IOException {
         Optional<Ingredient> ingredient = ingredientRepository.findIngredientByUserIdAndNameKo(user.getId(),name_ko);
         String name_en = translateService.translateText("ko", "en", name_ko);
+        String imgPath = "";
+        if (file!=null) imgPath = s3Service.upload(file);
         if (ingredient.isEmpty()) {
-            ingredientRepository.save(Ingredient.builder().user(user).name_ko(name_ko).name_en(name_en).build());
-            return ResponseEntity.status(HttpStatus.OK).body("성공적으로 등록되었습니다");
+            ingredientRepository.save(Ingredient.builder().user(user).image(imgPath).name_ko(name_ko).name_en(name_en).build());
+            return ResponseEntity.status(HttpStatus.OK).body(imgPath);
         } else {
             throw new ConflictException(ErrorCode.CONFLICT_INGREDIENT);
         }
