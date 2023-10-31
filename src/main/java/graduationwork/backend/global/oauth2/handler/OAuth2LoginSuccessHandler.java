@@ -30,7 +30,7 @@ public class OAuth2LoginSuccessHandler implements AuthenticationSuccessHandler {
             String accessToken = jwtService.createAccessToken(oAuth2User.getEmail());
             String refreshToken = jwtService.createRefreshToken();
 
-            String redirectUrl = "http://localhost:8080/redirect/" + accessToken + "/" + refreshToken;
+            String redirectUrl = "http://localhost:3000/redirect/" + accessToken + "/" + refreshToken;
             response.sendRedirect(redirectUrl);
 
             userRepository.findByEmail(oAuth2User.getEmail())
