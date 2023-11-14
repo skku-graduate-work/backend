@@ -38,7 +38,9 @@ public class FavoriteFoodService {
                     .name_en(foodList.get(i).getName_en())
                     .name_ko(foodList.get(i).getName_ko())
                     .image(foodList.get(i).getImage())
+                    .spoonacular_food_id(foodList.get(i).getSpoonacular_food_id())
                     .build();
+
             randomFoodDtoList.add(randomFoodDto);
         }
         RandomFoodListDto randomFoodListDto=RandomFoodListDto.builder().randomFoodList(randomFoodDtoList).build();

@@ -23,13 +23,15 @@ public class FavoriteFood {
     private String name_en;
     private String image;
     private Long food_id;
+    private Long spoonacular_food_id;
 
     @Builder
-    public FavoriteFood(User user, String name_ko, String name_en, String image, Long food_id) {
+    public FavoriteFood(User user, String name_ko, String name_en, String image, Long food_id,Long spoonacular_food_id) {
         this.user = user;
         this.name_ko = name_ko;
         this.name_en = name_en;
         this.image = image;
         this.food_id = food_id;
+        this.spoonacular_food_id = spoonacular_food_id;
     }
 }
