@@ -23,7 +23,7 @@ public class Food {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name="user_id")
     private User user;
-
+    private Long spoonacular_food_id;
     private String name_ko;
     private String name_en;
     private String image;
@@ -33,10 +33,11 @@ public class Food {
 
 
     @Builder
-    public Food(User user, String name_ko,String name_en, String image) {
+    public Food(User user, String name_ko,String name_en, String image,Long spoonacular_food_id) {
         this.user = user;
         this.name_ko = name_ko;
         this.name_en = name_en;
         this.image = image;
+        this.spoonacular_food_id = spoonacular_food_id;
     }
 }

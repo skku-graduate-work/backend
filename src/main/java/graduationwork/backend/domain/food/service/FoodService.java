@@ -76,7 +76,8 @@ public class FoodService {
     private List<FoodResponseDto> getFoodResponse(List<Food> foodResponse) {
         List<FoodResponseDto> result = new ArrayList<>();
         for (int i = 0; i < foodResponse.size(); i++) {
-            FoodResponseDto foodResponseDto=FoodResponseDto.builder()
+            FoodResponseDto foodResponseDto = FoodResponseDto.builder()
+                    .spoonacular_food_id(foodResponse.get(i).getSpoonacular_food_id())
                     .image(foodResponse.get(i).getImage())
                     .name_ko(foodResponse.get(i).getName_ko())
                     .name_en(foodResponse.get(i).getName_en())
@@ -139,16 +140,18 @@ public class FoodService {
             for (JsonNode foodNode : foodArray) {
                 String name_en = foodNode.get("title").toString();
                 String image = foodNode.get("image").toString();
+                String spoonacular_food_id = foodNode.get("id").toString();
                 log.info("음식: {}, 이미지: {}", name_en, image);
                 Map<String, String> foodInfo = new HashMap<>();
                 foodInfo.put("name_en", name_en);
                 String name_ko=translateService.translateText("en", "ko", name_en);
                 foodInfo.put("name_ko", name_ko);
                 foodInfo.put("image", image);
+                foodInfo.put("spoonacular_food_id", spoonacular_food_id);
                 responseList.add(foodInfo);
 
                 // 음식 저장
-                Food food = foodRepository.save(Food.builder().name_en(name_en.replaceAll("\"", "")).name_ko(name_ko).image(image).user(user).build());
+                Food food = foodRepository.save(Food.builder().name_en(name_en.replaceAll("\"", "")).name_ko(name_ko).image(image).user(user).spoonacular_food_id(Long.valueOf(spoonacular_food_id)).build());
                 foodIngredientRepository.save(FoodIngredient.builder().ingredient(ingredient1).food(food).build());
                 foodIngredientRepository.save(FoodIngredient.builder().ingredient(ingredient2).food(food).build());
                 foodIngredientRepository.save(FoodIngredient.builder().ingredient(ingredient3).food(food).build());
