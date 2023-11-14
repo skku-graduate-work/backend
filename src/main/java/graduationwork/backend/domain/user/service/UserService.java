@@ -40,7 +40,7 @@ public class UserService {
         if (existingUser.isPresent()) {
             throw new ConflictException(ErrorCode.CONFLICT);
         } else {
-            User user = User.builder().email(signUpRequestDto.getEmail()).password(signUpRequestDto.getPassword()).build();
+            User user = User.builder().email(signUpRequestDto.getEmail()).password(signUpRequestDto.getPassword()).nickname(signUpRequestDto.getNickname()).build();
             user.passwordEncode(passwordEncoder);
             userRepository.save(user);
             log.info(user.getEmail() + " 회원가입 성공");
