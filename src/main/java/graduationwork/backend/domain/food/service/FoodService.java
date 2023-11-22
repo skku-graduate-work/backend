@@ -176,12 +176,13 @@ public class FoodService {
         float max_fat = user.getMaxFat();
         float max_protein = user.getMaxProtein();
 
-        List<Map<String, String>> response = getMinResponse(min_calories, min_carbs, min_fat, min_protein, user);
+        List<Map<String, String>> response = getMinResponse(min_calories, min_carbs, min_fat, min_protein,
+                max_calories,max_carbs,max_fat,max_protein,user);
 
         return ResponseEntity.ok(response);
     }
 
-    private  List<Map<String, String>> getMinResponse(float minCalories, float minCarbs, float minFat, float minProtein, User user) {
+    private  List<Map<String, String>> getMinResponse(float minCalories, float minCarbs, float minFat, float minProtein,float maxCalories,float maxCarbs,float maxFat,float maxProtein, User user) {
         final String url = "https://api.spoonacular.com/recipes/findByNutrients";
         HttpHeaders httpHeaders = new HttpHeaders();
         httpHeaders.set("x-api-key", apiConfig.getKey());
@@ -193,12 +194,16 @@ public class FoodService {
         params.put("minFat", minFat);
         params.put("minProtein", minProtein);
 
+        params.put("maxCarbs", maxCarbs);
+        params.put("maxCalories", maxCalories);
+        params.put("maxFat", maxFat);
+        params.put("maxProtein", maxProtein);
         params.put("number", 5);
 
         HttpEntity<?> requestEntity = new HttpEntity<>(httpHeaders);
 
         ResponseEntity response = new RestTemplate().exchange(
-                url + "?minCarbs={minCarbs}&minCalories={minCalories}&minFat={minFat}&minProtein={minProtein}&number={number}",
+                url + "?minCarbs={minCarbs}&maxCarbs={maxCarbs}&minCalories={minCalories}&maxCalories={maxCalories}&minFat={minFat}&maxFat={maxFat}&minProtein={minProtein}&maxProtein={maxProtein}&number={number}",
                 HttpMethod.GET,
                 requestEntity,
                 String.class,
